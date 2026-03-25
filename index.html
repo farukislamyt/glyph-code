@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GlyphCode™</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>🔷 GlyphCode™</h1>
+
+<div class="tabs">
+  <button onclick="showTab('encode')">Encode</button>
+  <button onclick="showTab('decode')">Decode</button>
+</div>
+
+<!-- ENCODE -->
+<div id="encode" class="tab active">
+  <textarea id="data" placeholder="Enter data"></textarea>
+  <button onclick="generate()">Generate Code</button>
+  <canvas id="canvas" width="300" height="300"></canvas>
+</div>
+
+<!-- DECODE -->
+<div id="decode" class="tab">
+  <input type="file" id="upload">
+  <button onclick="decodeImage()">Decode</button>
+  <canvas id="decodeCanvas" width="300" height="300"></canvas>
+  <pre id="output"></pre>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
