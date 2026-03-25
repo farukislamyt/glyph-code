@@ -6,33 +6,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="style.css">
+  <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
 </head>
 
 <body>
 
-<h1>🔷 GlyphCode™</h1>
+<div class="app">
 
-<div class="tabs">
-  <button onclick="showTab('encode')">Encode</button>
-  <button onclick="showTab('decode')">Decode</button>
-</div>
+  <header>
+    <h1>🔷 GlyphCode™</h1>
+    <p>Next-generation visual encoding system</p>
+  </header>
 
-<!-- ENCODE -->
-<div id="encode" class="tab active">
-  <textarea id="data" placeholder="Enter data"></textarea>
-  <button onclick="generate()">Generate Code</button>
-  <canvas id="canvas" width="300" height="300"></canvas>
-</div>
+  <!-- NAV -->
+  <div class="tabs">
+    <button onclick="showTab('encode')" class="active" id="btn-encode">Encode</button>
+    <button onclick="showTab('scan')" id="btn-scan">Scan</button>
+  </div>
 
-<!-- DECODE -->
-<div id="decode" class="tab">
-  <input type="file" id="upload">
-  <button onclick="decodeImage()">Decode</button>
-  <canvas id="decodeCanvas" width="300" height="300"></canvas>
-  <pre id="output"></pre>
+  <!-- ENCODE -->
+  <div id="encode" class="tab active">
+    <div class="card">
+      <h2>Encode Data</h2>
+
+      <textarea id="data" placeholder="Enter your data..."></textarea>
+
+      <button class="primary" onclick="generate()">Generate Code</button>
+
+      <canvas id="canvas" width="300" height="300"></canvas>
+    </div>
+  </div>
+
+  <!-- SCAN -->
+  <div id="scan" class="tab">
+    <div class="card">
+      <h2>Scan GlyphCode</h2>
+
+      <video id="video" autoplay></video>
+
+      <button class="primary" onclick="startCamera()">Start Camera</button>
+
+      <div class="result">
+        <h3>Result</h3>
+        <pre id="output">Waiting for scan...</pre>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="app.js"></script>
-
 </body>
 </html>
