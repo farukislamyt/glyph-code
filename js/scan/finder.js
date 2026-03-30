@@ -1,0 +1,1 @@
+export const detectFinders=b=>b.sort((a,c)=>c.length-a.length).slice(0,3).map(x=>{const cx=x.reduce((s,p)=>s+p[0],0)/x.length;const cy=x.reduce((s,p)=>s+p[1],0)/x.length;return{x:cx,y:cy};});

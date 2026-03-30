@@ -1,0 +1,1 @@
+export function preprocess(ctx,w,h){const d=ctx.getImageData(0,0,w,h).data;const g=[];for(let i=0;i<d.length;i+=4)g.push(.3*d[i]+.59*d[i+1]+.11*d[i+2]);const o=[];for(let y=0;y<h;y++){for(let x=0;x<w;x++){let s=0,c=0;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){let nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<w&&ny<h){s+=g[ny*w+nx];c++;}}o.push(g[y*w+x]<s/c-10?1:0);}}return o;}

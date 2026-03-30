@@ -1,0 +1,1 @@
+let b=[];export function stabilize(bits){b.push(bits);if(b.length<3)return null;if(b.slice(-3).every(x=>x===b[b.length-1]))return bits;return null;}

@@ -1,0 +1,1 @@
+export async function startCamera(v){const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});v.srcObject=s;}

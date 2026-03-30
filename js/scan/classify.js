@@ -1,0 +1,1 @@
+export function classifyCell(ctx,x,y,s){const d=ctx.getImageData(x,y,s,s).data;let black=0;for(let i=0;i<d.length;i+=4)if(d[i]<128)black++;const r=black/(d.length/4);if(r>.6)return'00';if(r>.4)return'01';if(r>.2)return'10';return'11';}

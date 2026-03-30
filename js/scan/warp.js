@@ -1,0 +1,1 @@
+export function warpToSquare(ctx,pts,size=240){const c=document.createElement('canvas').getContext('2d');c.canvas.width=size;c.canvas.height=size;const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);c.drawImage(ctx.canvas,Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys),0,0,size,size);return c;}

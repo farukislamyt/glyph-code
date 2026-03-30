@@ -1,0 +1,1 @@
+export const toBits=t=>Array.from(new TextEncoder().encode(t)).map(b=>b.toString(2).padStart(8,'0')).join('');export const fromBits=b=>new TextDecoder().decode(new Uint8Array((b.match(/.{1,8}/g)||[]).map(x=>parseInt(x,2))));

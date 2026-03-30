@@ -1,0 +1,1 @@
+import{fromBits}from'./bitstream.js';import{decodeECC}from'./ecc.js';export function decodeBits(bits){const clean=decodeECC(bits);return fromBits(clean.substr(32));}

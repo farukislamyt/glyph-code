@@ -1,0 +1,1 @@
+export function interleave(bits,w=8){let rows=[];for(let i=0;i<bits.length;i+=w)rows.push(bits.substr(i,w));let o='';for(let c=0;c<w;c++)for(let r=0;r<rows.length;r++)o+=rows[r][c]||'0';return o;}

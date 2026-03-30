@@ -1,0 +1,1 @@
+export const checksum=b=>(b.split('').reduce((a,x)=>a+ +x,0)%256).toString(2).padStart(8,'0');
