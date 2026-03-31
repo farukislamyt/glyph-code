@@ -1,1 +1,202 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>GlyphCode</title><link rel='stylesheet' href='css/main.css'></head><body><h1>GlyphCode</h1><textarea id='data'></textarea><button id='generate'>Generate</button><canvas id='canvas' width='320' height='320'></canvas><video id='video' autoplay></video><p id='output'>Waiting...</p><script type='module' src='js/app.js'></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlyphCode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-mark">
+        <span class="glyph-icon">◆</span>
+        <span class="glyph-icon">▲</span>
+        <span class="glyph-icon">●</span>
+      </div>
+      <h1>GlyphCode</h1>
+    </div>
+    <p class="tagline">Visual binary encoding — text to symbols, symbols to text</p>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="encode">
+      <span class="tab-icon">⬡</span> Encode
+    </button>
+    <button class="tab" data-tab="decode">
+      <span class="tab-icon">◎</span> Decode
+    </button>
+    <button class="tab" data-tab="explain">
+      <span class="tab-icon">≡</span> How It Works
+    </button>
+  </nav>
+
+  <!-- ── ENCODE TAB ─────────────────────────────────────────────── -->
+  <section class="tab-panel active" id="tab-encode">
+    <div class="panel-grid">
+
+      <!-- Input -->
+      <div class="card">
+        <div class="card-label">INPUT TEXT</div>
+        <textarea id="input-text" placeholder="Type anything — letters, numbers, emoji…&#10;&#10;GlyphCode encodes up to ~60 chars per frame, with ECC protecting each frame against scan errors."></textarea>
+        <div class="input-meta">
+          <span id="char-count">0 chars</span>
+          <span id="frame-count">— frames</span>
+        </div>
+        <button id="btn-generate" class="btn-primary">
+          <span>Generate Code</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Output canvas -->
+      <div class="card card-canvas">
+        <div class="card-label">GLYPH FRAME <span id="frame-indicator" class="dim">—</span></div>
+        <div class="canvas-wrap">
+          <canvas id="canvas" width="320" height="320"></canvas>
+          <div id="canvas-placeholder" class="canvas-placeholder">
+            <div class="placeholder-glyphs">◆ ▲ ● ■</div>
+            <div class="placeholder-text">Code appears here</div>
+          </div>
+        </div>
+        <div class="frame-controls" id="frame-controls" style="display:none">
+          <div class="playback-info">
+            <span id="playback-label">Playing</span>
+            <span class="dot-sep">·</span>
+            <span id="playback-fps">800ms / frame</span>
+          </div>
+          <div class="speed-row">
+            <label>Speed</label>
+            <input type="range" id="speed-slider" min="200" max="2000" value="800" step="100">
+            <span id="speed-label">800ms</span>
+          </div>
+          <button id="btn-download" class="btn-secondary">⬇ Download Frame</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── DECODE TAB ─────────────────────────────────────────────── -->
+  <section class="tab-panel" id="tab-decode">
+    <div class="panel-grid">
+
+      <div class="card">
+        <div class="card-label">CAMERA FEED</div>
+        <div class="video-wrap">
+          <video id="video" autoplay playsinline muted></video>
+          <div id="scan-overlay" class="scan-overlay">
+            <div class="scan-corner tl"></div>
+            <div class="scan-corner tr"></div>
+            <div class="scan-corner bl"></div>
+            <div class="scan-corner br"></div>
+            <div class="scan-line"></div>
+          </div>
+        </div>
+        <div class="scan-status">
+          <div class="status-dot" id="status-dot"></div>
+          <span id="scan-status-text">Point camera at a GlyphCode</span>
+        </div>
+        <div class="progress-wrap" id="progress-wrap" style="display:none">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span id="progress-label">0 / 0 frames</span>
+        </div>
+        <div class="btn-row">
+          <button id="btn-start-cam" class="btn-primary">Start Camera</button>
+          <button id="btn-stop-cam" class="btn-secondary" style="display:none">Stop</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">DECODED OUTPUT</div>
+        <div id="output-box" class="output-box">
+          <div class="output-placeholder">Decoded text will appear here…</div>
+        </div>
+        <div class="btn-row" id="output-actions" style="display:none">
+          <button id="btn-copy" class="btn-secondary">⧉ Copy</button>
+          <button id="btn-clear-output" class="btn-ghost">Clear</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── EXPLAIN TAB ─────────────────────────────────────────────── -->
+  <section class="tab-panel" id="tab-explain">
+    <div class="explain-grid">
+
+      <div class="explain-card">
+        <div class="explain-num">01</div>
+        <h3>Text → Bits</h3>
+        <p>Your text is UTF-8 encoded into a binary string. "Hi" → <code>0100100001101001</code>. Any Unicode character works.</p>
+        <div class="code-badge">bitstream.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">02</div>
+        <h3>Chunking + Header</h3>
+        <p>The bit stream is split into <strong>480-bit chunks</strong>. Each chunk gets an 8-bit sync preamble, frame ID, total frame count, and a checksum — 32 bits of header total.</p>
+        <div class="code-badge">encoder.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">03</div>
+        <h3>Error Correction</h3>
+        <p>Every 32-bit block is <strong>tripled</strong>. On decode, a majority vote across 3 copies corrects any single corrupted copy — tolerating ~33% cell error rate.</p>
+        <div class="code-badge">ecc.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">04</div>
+        <h3>Interleaving</h3>
+        <p>Bits are shuffled column-major before display. A localised scan error (smudge, glare) will corrupt <em>spread-out</em> bits, making ECC far more effective.</p>
+        <div class="code-badge">interleave.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">05</div>
+        <h3>Glyph Rendering</h3>
+        <p>Every <strong>6 bits</strong> becomes one glyph: 2 bits for <em>shape</em> (circle/square/triangle/diamond), 2 bits for <em>rotation</em>, 2 bits for <em>fill density</em>. 64 distinct states per cell.</p>
+        <div class="code-badge">glyph.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">06</div>
+        <h3>Finder Patterns</h3>
+        <p>Three bold bordered squares sit in the corners. They are <em>not data</em> — the scanner uses them to locate and orient the code, then warps it into a square for reliable cell reading.</p>
+        <div class="code-badge">finder.js · warp.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">07</div>
+        <h3>Scanning</h3>
+        <p>The camera feed is grayscale + adaptively thresholded. Connected components are labelled, the 3 largest square blobs are treated as finders, and each data cell's pixel density is classified.</p>
+        <div class="code-badge">preprocess.js · blob.js · classify.js</div>
+      </div>
+
+      <div class="explain-card">
+        <div class="explain-num">08</div>
+        <h3>Stabilisation + Reassembly</h3>
+        <p>A frame is only accepted after <strong>2 identical consecutive reads</strong> (eliminates noise). Frames are collected by ID; when all arrive, payloads are concatenated and decoded back to text.</p>
+        <div class="code-badge">stabilize.js · scanner.js</div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <span>GlyphCode — open visual encoding</span>
+    <span class="dim">6 bits/glyph · triple ECC · interleaved · finder-aligned</span>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
